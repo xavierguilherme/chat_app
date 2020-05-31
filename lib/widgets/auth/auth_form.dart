@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
+  final void Function(
+    String email,
+    String password,
+    String userName,
+    bool isLogin,
+    BuildContext ctx,
+  ) submitFn;
+
+  AuthForm(this.submitFn);
+
   @override
   _AuthFormState createState() => _AuthFormState();
 }
@@ -18,6 +28,14 @@ class _AuthFormState extends State<AuthForm> {
 
     if (isValid) {
       _formKey.currentState.save();
+
+      widget.submitFn(
+        _userEmail.trim(),
+        _userPassword.trim(),
+        _userName.trim(),
+        _isLogin,
+        context,
+      );
     }
   }
 
@@ -51,21 +69,21 @@ class _AuthFormState extends State<AuthForm> {
                     },
                   ),
                   if (!_isLogin)
-                  TextFormField(
-                    key: ValueKey('username'),
-                    validator: (value) {
-                      if (value.isEmpty || value.length < 4) {
-                        return 'Please enter at least 4 characters';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Username',
+                    TextFormField(
+                      key: ValueKey('username'),
+                      validator: (value) {
+                        if (value.isEmpty || value.length < 4) {
+                          return 'Please enter at least 4 characters';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                      ),
+                      onSaved: (value) {
+                        _userName = value;
+                      },
                     ),
-                    onSaved: (value) {
-                      _userName = value;
-                    },
-                  ),
                   TextFormField(
                     key: ValueKey('password'),
                     validator: (value) {
